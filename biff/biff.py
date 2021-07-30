@@ -48,8 +48,11 @@ def Page_Get_Highlights(doc,doc_text):
         
         # different shades of yellow
         yellows=[b"1 0.952941 0.658824 RG",b"1 1 0 RG"]
+        # yellows[0] is pre Remarkable 2.7 and yellows[1] is for highlights from Remarkable ver 2.7 and later
+        yellows=[b"1 0.952941 0.658824 RG", b"0.992157 1 0.196078 rg",b"1 1 0 RG"]
         is_yellow=[True if y in cont else False for y in yellows]
         ind_yellow=[i for i in range(2) if is_yellow[i]==True]
+        ind_yellow=[i for i in range(3) if is_yellow[i]==True]
         
         if len(ind_yellow)>0:
             cont=cont.replace(yellows[ind_yellow[0]],b"0 0 0 RG")
@@ -168,6 +171,8 @@ def Page_Rect_get_Text_odf(doc,page_num,rects,hierarchy,Xrects,output,style_p,st
     for i in range(rects.shape[0]):
         if hierarchy[i,3]==-1:
             rect=Rect(rects[i,0],rects[i,1],rects[i,2],rects[i,3])
+        	#modify bounds of rectangle to work with highlights from Remarkable ver 2.7 and later
+            rect=Rect(rects[i,0]-10.,rects[i,1]-5.,rects[i,2]+25.,rects[i,3]+5.)
             allwords = [w for w in words if Rect(w[:4]) in rect]
             # iterate over all rects to exclude
             mywords=[]
